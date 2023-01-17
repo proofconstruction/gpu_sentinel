@@ -27,6 +27,12 @@ def create_kill_fn(action: str) -> Callable:
         return shutdown
     elif action == "reboot":
         return reboot
+    elif action == "disconnect_colab":
+        try:
+            from google.colab import runtime
+            runtime.unassign()
+        except:
+            raise Exception("Must be running in Google Colaboratory to use this action.")
     else:
         raise Exception("Unknown action")
 
@@ -85,7 +91,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--kill_action",
-        choices=["end_process", "shutdown", "reboot"],
+        choices=["end_process", "shutdown", "reboot", "disconnect_colab"],
         default="end_process",
         help="What to do when the kill trigger is hit",
     )
